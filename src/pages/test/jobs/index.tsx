@@ -68,7 +68,7 @@ interface JobCard
   extends Pick<Job, "jobTitle" | "companyName" | "jobDescription"> {}
 
 const JobPage: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
-  console.log(jobs.length);
+ 
   return (
     <div className="flex flex-col py-2">
       {jobs.map((job: Job) => (
