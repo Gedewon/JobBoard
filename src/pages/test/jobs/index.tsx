@@ -64,12 +64,46 @@ interface Job {
   snippets: string[];
 }
 
-const JobPage:React.FC<{jobs:Job[]}> =  ({ jobs })=> {
-  return <h1>{JSON.stringify(jobs)}</h1>;
-}
+interface JobCard
+  extends Pick<Job, "jobTitle" | "companyName" | "jobDescription"> {}
 
-export const  getServerSideProps:GetServerSideProps = async () => {
+const JobPage: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
+  console.log(jobs.length);
+  return (
+    <div className="flex flex-col py-2">
+      {jobs.map((job: Job) => (
+        <JobCard
+          key={job.jobId}
+          companyName={job.companyName}
+          jobDescription={job.jobDescription}
+          jobTitle={job.jobTitle}
+        />
+      ))}
+    </div>
+  );
+};
 
+const JobCard: React.FC<JobCard> = (Job) => {
+  return (
+    <div className="w-full ">
+      <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+        <div className="mb-8">
+          <div className="text-gray-900 font-bold text-xl mb-2">
+            {Job.jobTitle}
+          </div>
+          <div className="flex items-center">
+            <div className="text-lg">
+              <p className="text-gray-900  text-md mb-2">{Job.companyName}</p>
+            </div>
+          </div>
+          <div dangerouslySetInnerHTML={{ __html: Job.jobDescription }} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
   const res = await fetch(`https://www.zippia.com/api/jobs/`, {
     method: "POST",
     headers: {
@@ -81,16 +115,16 @@ export const  getServerSideProps:GetServerSideProps = async () => {
       fetchJobDesc: true,
       jobTitle: "Business Analyst",
       locations: [],
-      numJobs: 20,
+      numJobs: 10,
       previousListingHashes: [],
     }),
   });
 
   const data = await res.json();
 
-  const {jobs} = data
-  
-  return { props: { jobs } as unknown as  Job[] };
-}
+  const { jobs } = data;
+
+  return { props: { jobs } as unknown as Job[] };
+};
 
 export default JobPage;
