@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next/types";
-import React from "react";
+import React, { MouseEventHandler } from "react";
 
 interface Job {
   jobId: string;
@@ -87,6 +87,37 @@ const JobPage: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
     };
   }, [selectedCompany, jobs]);
 
+  const handleFilterByDate = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+
+    const jobPublishedInLast7days = jobs.filter((job) => {
+      /**
+       *  format of the "postedDate" is like "12h ago" or "12d ago"
+       *  we will split and check the first part.
+       */
+      const [days] = job.postedDate.split(" ");
+
+      /**
+       * if it's in months or year return early
+       * assumption: m only refers months not minutes.
+       */
+      if (["m", "y"].includes(days.charAt(days.length - 1))) return false;
+
+      /**
+       * if it's been more that 7 days return early.
+       */
+      if (parseInt(days.slice(0, days.length - 1)) > 7) return false;
+
+      return true;
+    });
+
+    if (jobPublishedInLast7days.length === 0) return;
+
+    setSelectedJob(jobPublishedInLast7days);
+  };
+
   return (
     <div className="flex flex-col py-2">
       <label
@@ -115,6 +146,15 @@ const JobPage: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
           );
         })}
       </select>
+
+      <button
+        type="button"
+        onClick={handleFilterByDate}
+        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Jobs in the last 7 days
+      </button>
+
       {selectedJob.map((job: Job) => (
         <JobCard
           key={job.jobId}
