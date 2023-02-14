@@ -7,12 +7,24 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   React.useEffect(() => {
+    /**
+     * This is to simulate How to load heavy page.
+     * application loads depending on if the application is running on dev mode (using `next dev`)
+     * or on production mode (using `next start`).
+     * The main difference is that on dev mode,
+     * the app will wait until everything downloads to show the first render.
+     * This means a blank screen will be shown until `_app.js` downloads.
+     * On production mode, the app will show the first render of `_document.tsx`
+     * while downloading the rest of the app in the background.
+     */
     const timeID = setTimeout(() => {
       Router.push(`test/jobs`);
     }, 2000);
 
-    return ()=>{clearTimeout(timeID);}
-  },[]);
+    return () => {
+      clearTimeout(timeID);
+    };
+  }, []);
 
   return (
     <>

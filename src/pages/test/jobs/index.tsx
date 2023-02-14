@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import JobCard from "@/components/JobCard";
 import { GetServerSideProps } from "next/types";
-import React, { MouseEventHandler } from "react";
+import React from "react";
 
 export interface Job {
   jobId: string;
@@ -75,7 +75,7 @@ const JobPage: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
 
   React.useEffect(() => {
     let isDisposed = false;
-    
+
     const getJobByCompanyName = (companyName: string): Job[] => {
       if (companyName === "all") return jobs;
       return jobs.filter((job: Job) => job.companyName === companyName);
@@ -110,6 +110,12 @@ const JobPage: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
+  /**
+   * This runs in Node.js runtime so no need to have it in separate api routes and have extra
+   * response/request cycle.
+   * @see {https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props#getserversideprops-or-api-routes}
+   */
+
   const res = await fetch(`https://www.zippia.com/api/jobs/`, {
     method: "POST",
     headers: {

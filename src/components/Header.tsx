@@ -42,7 +42,6 @@ const Header: React.FC<HeaderProps> = ({
       if (jobPublishedInLast7days.length === 0) return;
 
       setSelectedJob(jobPublishedInLast7days);
-
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [jobs.toString(), setSelectedJob]
