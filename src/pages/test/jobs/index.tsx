@@ -119,67 +119,71 @@ const JobPage: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
   };
 
   return (
-    <div className="flex flex-col py-2">
-      <label
-        htmlFor="countries"
-        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-      >
-        Select by Company
-      </label>
-      <select
-        value={selectedCompany}
-        onChange={(e) => setSelectedCompany(e.target.value)}
-        id="countries"
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      >
-        <option key={`selectCompany-all`} value={"all"}>
-          all
-        </option>
-        {jobs.map((jobs) => {
-          return (
-            <option
-              key={`selectCompany-${jobs.jobId}`}
-              value={jobs.companyName}
-            >
-              {jobs.companyName}
+    <div className="flex flex-col p-2 m-8">
+      <section className="flex justify-between">
+        <section className="flex items-center gap-2">
+          <label
+            htmlFor="countries"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Select by Company
+          </label>
+          <select
+            value={selectedCompany}
+            onChange={(e) => setSelectedCompany(e.target.value)}
+            id="countries"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option key={`selectCompany-all`} value={"all"}>
+              all
             </option>
-          );
-        })}
-      </select>
+            {jobs.map((jobs) => {
+              return (
+                <option
+                  key={`selectCompany-${jobs.jobId}`}
+                  value={jobs.companyName}
+                >
+                  {jobs.companyName}
+                </option>
+              );
+            })}
+          </select>
+        </section>
 
-      <button
-        type="button"
-        onClick={handleFilterByDate}
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      >
-        Jobs in the last 7 days
-      </button>
+        <button
+          type="button"
+          onClick={handleFilterByDate}
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        >
+          Jobs in the last 7 days
+        </button>
+      </section>
 
-      {selectedJob.map((job: Job) => (
-        <JobCard
-          key={job.jobId}
-          companyName={job.companyName}
-          jobDescription={job.jobDescription}
-          jobTitle={job.jobTitle}
-        />
-      ))}
+      <section className="w-full">
+        {selectedJob.map((job: Job) => (
+          <JobCard
+            key={job.jobId}
+            companyName={job.companyName}
+            jobDescription={job.jobDescription}
+            jobTitle={job.jobTitle}
+          />
+        ))}
+      </section>
     </div>
   );
 };
 
 const JobCard: React.FC<JobCard> = (Job) => {
   return (
-    <div className="w-full ">
-      <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-        <div className="mb-8">
-          <div className="text-gray-900 font-bold text-xl mb-2">
-            {Job.jobTitle}
-          </div>
-          <div className="flex items-center">
-            <div className="text-lg">
-              <p className="text-gray-900  text-md mb-2">{Job.companyName}</p>
-            </div>
-          </div>
+    <div className="my-2">
+      <div className=" bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+        <h5 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
+          {Job.jobTitle}
+        </h5>
+        <p className="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">
+          {Job.companyName}
+        </p>
+        <div className="p-4 border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r  flex flex-col justify-between leading-normal">
           <div dangerouslySetInnerHTML={{ __html: Job.jobDescription }} />
         </div>
       </div>
