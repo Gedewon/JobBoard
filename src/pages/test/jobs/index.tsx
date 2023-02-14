@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next/types";
+import React from "react";
 
 interface Job {
   jobId: string;
@@ -68,10 +69,53 @@ interface JobCard
   extends Pick<Job, "jobTitle" | "companyName" | "jobDescription"> {}
 
 const JobPage: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
- 
+  const [selectedJob, setSelectedJob] = React.useState<Job[]>(jobs);
+  const [selectedCompany, setSelectedCompany] = React.useState<
+    Job["companyName"] | "all"
+  >("all");
+
+  React.useEffect(() => {
+    let isDisposed = false;
+    const getJobByCompanyName = (companyName: string): Job[] => {
+      if (companyName === "all") return jobs;
+      return jobs.filter((job: Job) => job.companyName === companyName);
+    };
+    if (!isDisposed) setSelectedJob(getJobByCompanyName(selectedCompany));
+
+    return () => {
+      isDisposed = true;
+    };
+  }, [selectedCompany, jobs]);
+
   return (
     <div className="flex flex-col py-2">
-      {jobs.map((job: Job) => (
+      <label
+        htmlFor="countries"
+        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >
+        Select by Company
+      </label>
+      <select
+        value={selectedCompany}
+        onChange={(e) => setSelectedCompany(e.target.value)}
+        id="countries"
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
+        <option key={`selectCompany-all`} value={"all"}>
+          all
+        </option>
+        {jobs.map((jobs) => {
+          return (
+            <option
+              key={`selectCompany-${jobs.jobId}`}
+              value={jobs.companyName}
+            >
+              {jobs.companyName}
+            </option>
+          );
+        })}
+      </select>
+      {selectedJob.map((job: Job) => (
         <JobCard
           key={job.jobId}
           companyName={job.companyName}
