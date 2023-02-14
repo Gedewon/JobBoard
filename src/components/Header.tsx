@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({
     [jobs.toString(), setSelectedJob]
   );
   return (
-    <section className="flex justify-between">
+    <section className="flex  flex-col sm:block">
       <section className="flex items-center gap-2">
         <label
           htmlFor="countries"
@@ -80,7 +80,7 @@ const Header: React.FC<HeaderProps> = ({
       <button
         type="button"
         onClick={handleFilterByDate}
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        className="min-w-fit text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm sm:px-5 sm:py-2.5 sm:mr-2 sm:my-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       >
         Jobs in the last 7 days
       </button>
